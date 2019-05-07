@@ -1,4 +1,4 @@
-package com.srpinghibernate.demo;
+package com.springhibernate.demo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
