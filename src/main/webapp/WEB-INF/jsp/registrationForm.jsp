@@ -8,10 +8,10 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <!------ Include the above in your HEAD tag ---------->
   </head>
+  <header>
+    <jsp:include page="includes/navbar.jsp"/>
+  </header>
   <body>
-    <header>
-      <jsp:include page="includes/navbar.jsp"/>
-    </header>
     <div class="container">
       <form class="form-horizontal" action='' method="POST">
         <fieldset>

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
@@ -21,5 +22,10 @@ public class StudentService {
     @Transactional
     public List<Student> listStudents() {
         return studentDao.getAll();
+    }
+
+    @Transactional
+    public Optional<Student> listStudent(long id) {
+        return studentDao.get(id);
     }
 }

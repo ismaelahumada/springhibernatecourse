@@ -28,6 +28,9 @@ public class Student extends DatabaseObject {
     @Column(name = "academic_status")
     private AcademicStatus academicStatus;
 
+    @Column
+    private String columnaDePrueba;
+
     @Column(name = "uuid", nullable = false, updatable = false)
     private String uniqueId;
 

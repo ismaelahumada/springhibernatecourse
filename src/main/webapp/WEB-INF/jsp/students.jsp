@@ -10,11 +10,11 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
   </head>
+  <header>
+    <jsp:include page="includes/navbar.jsp"/>
+ </header>
   <body>
     <div class="container">
-      <header>
-        <jsp:include page="includes/navbar.jsp"/>
-     </header>
       <table class="table">
         <thead class="black white-text">
           <tr>
