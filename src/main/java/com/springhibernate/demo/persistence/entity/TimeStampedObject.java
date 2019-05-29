@@ -1,4 +1,4 @@
-package com.springhibernate.demo.persistence.Entity;
+package com.springhibernate.demo.persistence.entity;
 
 import lombok.Getter;
 import lombok.Setter;

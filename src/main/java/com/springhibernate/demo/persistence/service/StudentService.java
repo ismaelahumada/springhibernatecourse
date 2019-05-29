@@ -1,6 +1,6 @@
 package com.springhibernate.demo.persistence.service;
 
-import com.springhibernate.demo.persistence.Entity.Student;
+import com.springhibernate.demo.persistence.entity.Student;
 import com.springhibernate.demo.persistence.dao.StudentDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,5 +27,10 @@ public class StudentService {
     @Transactional
     public Optional<Student> listStudent(long id) {
         return studentDao.get(id);
+    }
+
+    @Transactional
+    public void remove(Student student) {
+        studentDao.delete(student);
     }
 }

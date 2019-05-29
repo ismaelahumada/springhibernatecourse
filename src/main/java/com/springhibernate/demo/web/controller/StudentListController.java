@@ -1,7 +1,8 @@
 package com.springhibernate.demo.web.controller;
 
-import com.springhibernate.demo.persistence.Entity.Student;
+import com.springhibernate.demo.persistence.entity.Student;
 import com.springhibernate.demo.persistence.service.StudentService;
+import com.springhibernate.demo.web.service.StudentRegistrationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -30,8 +31,10 @@ public class StudentListController {
     public String listStudent(ModelMap model, @RequestParam long id) {
         Optional<Student> student;
         student = studentService.listStudent(id);
-        if (student.isPresent()){
-        model.put("studentList", Arrays.asList(student.get()));}
+        studentService.remove(student.get());
+        if (student.isPresent()) {
+            model.put("studentList", Arrays.asList(student.get()));
+        }
         return "students";
     }
 }

@@ -1,7 +1,10 @@
 package com.springhibernate.demo.persistence.dao;
 
-import com.springhibernate.demo.persistence.Entity.Student;
+import com.springhibernate.demo.persistence.entity.Address;
+import com.springhibernate.demo.persistence.entity.Student;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +33,10 @@ public class StudentDao implements IStudentDao {
     }
 
     @Override
-    @Transactional
+    @Autowired
     public List<Student> getAll() {
         System.out.println("---------------Printing studentList from JPQL query---------------");
-        List<Student> studentList = em.createQuery("select st from Student st", Student.class).getResultList();
+        List<Student> studentList = em.createQuery("from Student order by email DESC", Student.class).getResultList();
         for (Student s : studentList) {
             System.out.println(s.getEmail());
         }
@@ -56,13 +59,16 @@ public class StudentDao implements IStudentDao {
     @Override
     @Transactional
     public int save(Object o) {
-        em.persist(o);
+        Student s = (Student) o;
+        Address address = em.find(Address.class, s.getAddress().getId());
+        s.setAddress(address);
+        ((Session) em.getDelegate()).saveOrUpdate(o);
         log.error("persisted object" + o);
         return 1;
     }
 
     @Override
     public void delete(Object o) {
-
+        em.remove(o);
     }
 }

@@ -1,13 +1,16 @@
-package com.springhibernate.demo.persistence.Entity;
+package com.springhibernate.demo.persistence.entity;
 
 import com.springhibernate.demo.model.AcademicStatus;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 @Getter @Setter
@@ -27,6 +30,9 @@ public class Student extends DatabaseObject {
     @Enumerated(EnumType.STRING)
     @Column(name = "academic_status")
     private AcademicStatus academicStatus;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private Address address;
 
     @Column
     private String columnaDePrueba;

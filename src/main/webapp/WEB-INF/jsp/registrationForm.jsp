@@ -54,6 +54,15 @@
             </div>
           </div>
 
+          <div class="control-group">
+            <!-- Address-->
+            <label class="control-label" for="address">Address</label>
+            <div class="controls">
+              <input type="text" id="addressId" name="addressId" placeholder="" class="input-xlarge">
+              <p class="help-block">Address should be an integer number</p>
+            </div>
+          </div>
+
           <div class="control-group controls">
             <select class="form-control" id ="academicstatus" name = "academicstatus">
                 <option value="REGULAR">Regular</option>
