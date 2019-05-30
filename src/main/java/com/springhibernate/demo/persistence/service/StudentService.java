@@ -1,18 +1,23 @@
 package com.springhibernate.demo.persistence.service;
 
+import com.springhibernate.demo.persistence.dao.IStudentDao;
 import com.springhibernate.demo.persistence.entity.Student;
-import com.springhibernate.demo.persistence.dao.StudentDao;
+import com.springhibernate.demo.util.OnlyAcademicPurposes;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service @Slf4j
 public class StudentService {
     @Autowired
-    private StudentDao studentDao;
+    private IStudentDao<Student> studentDao;
+    @Autowired
+    private OnlyAcademicPurposes oap;
 
     @Transactional
     public void createStudent(Student student) {
@@ -20,8 +25,17 @@ public class StudentService {
     }
 
     @Transactional
-    public List<Student> listStudents() {
-        return studentDao.getAll();
+    public Collection<Student> listStudents() {
+        log.info(oap.printSpaces());
+        System.out.println("Entering non tweaked dao");
+        Collection<Student> studentDaoAll = studentDao.getAll();
+        log.info(oap.printSpaces());
+        log.info(oap.printSpaces());
+        System.out.println("Entering tweaked dao");
+        Collection<Student> studentsFetchJoin = studentDao.getAllStudentsFetchJoinCourses();
+
+        log.info(oap.printSpaces());
+        return studentsFetchJoin;
     }
 
     @Transactional

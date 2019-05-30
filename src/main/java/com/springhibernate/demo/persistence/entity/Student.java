@@ -4,13 +4,8 @@ import com.springhibernate.demo.model.AcademicStatus;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Getter @Setter
@@ -36,6 +31,9 @@ public class Student extends DatabaseObject {
 
     @Column
     private String columnaDePrueba;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    private List<Course> courses;
 
     @Column(name = "uuid", nullable = false, updatable = false)
     private String uniqueId;
