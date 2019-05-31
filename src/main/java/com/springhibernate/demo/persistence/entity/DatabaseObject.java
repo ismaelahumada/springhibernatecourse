@@ -9,8 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 
 @Getter @Setter @MappedSuperclass
-abstract class DatabaseObject extends TimeStampedObject{
+abstract class DatabaseObject extends TimeStampedObject {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long id;
+    private Long id;
 }

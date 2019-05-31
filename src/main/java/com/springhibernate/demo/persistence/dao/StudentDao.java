@@ -1,7 +1,10 @@
 package com.springhibernate.demo.persistence.dao;
 
 import com.springhibernate.demo.persistence.entity.Address;
+import com.springhibernate.demo.persistence.entity.Course;
 import com.springhibernate.demo.persistence.entity.Student;
+import com.springhibernate.demo.persistence.entity.Subject;
+import com.springhibernate.demo.util.OnlyAcademicPurposes;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,38 +24,65 @@ import java.util.Optional;
 public class StudentDao implements IStudentDao {
     @PersistenceContext
     private EntityManager em;
+    @Autowired
+    private OnlyAcademicPurposes oap;
 
     @Override
     public Optional<Student> get(long id) {
         Student student = em.createQuery("select st from Student st where id = " + id, Student.class).getSingleResult();
-        System.out.println("---------------Print student from JPQL query: " + student.getEmail() + " ---------------");
+        log.info("---------------Print student from JPQL query: " + student.getEmail() + " ---------------");
         Student hibernateStudent = em.find(Student.class, id);
-        System.out.println("---------------Print student from hibernate find implementation: " + hibernateStudent.getEmail() + " ---------------");
+        log.info("---------------Print student from hibernate find implementation: " + hibernateStudent.getEmail() + " ---------------");
         //return Optional.ofNullable(student1);
         return Optional.ofNullable(student);
     }
 
     @Override
-    @Autowired
     public List<Student> getAll() {
-        System.out.println("---------------Printing studentList from JPQL query---------------");
-        List<Student> studentList = em.createQuery("from Student order by email DESC", Student.class).getResultList();
+        log.info("---------------Printing studentList from HQL query---------------");
+        List<Student> studentList = em.createQuery("from Student", Student.class).getResultList();
         for (Student s : studentList) {
-            System.out.println(s.getEmail());
+            log.info(s.getEmail());
+            log.info("Print Student's courses if any");
+            for (Course c : s.getCourses()) {
+                log.info(c.getBriefDescription());
+                for (Subject sub : c.getSubjects()){
+                    log.info(sub.getName());
+                    log.info(sub.getComplexity().name());
+                }
+            }
         }
-        printAllStudentsWithCriteriaQuery();
+        //printAllStudentsWithCriteriaQuery();
         return studentList;
     }
 
-    public void printAllStudentsWithCriteriaQuery() {
+    public List<Student> getAllStudentsJoinFetchCourses() {
+        log.info("---------------Printing studentList from HQL query---------------");
+        List<Student> studentList = em.createQuery("select distinct s from Student s join fetch s.courses", Student.class).getResultList();
+        //modificar la query para usar fetch join de subject
+        for (Student s : studentList) {
+            log.info(s.getEmail());
+            log.info("Print Student's courses");
+            for (Course c : s.getCourses()) {
+                log.info("Book Description:" + c.getBriefDescription());
+                for (Subject sub : c.getSubjects()){
+                    log.info(sub.getName());
+                    log.info(sub.getComplexity().name());
+                }
+            }
+        }
+        return studentList;
+    }
+
+    private void printAllStudentsWithCriteriaQuery() {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Student> cq = cb.createQuery(Student.class);
         Root<Student> rootEntry = cq.from(Student.class);
-        System.out.println("---------------Printing all students from Criteria query---------------");
+        log.info("---------------Printing all students from Criteria query---------------");
         CriteriaQuery<Student> all = cq.select(rootEntry);
         TypedQuery<Student> allQuery = em.createQuery(all);
         for (Student s : allQuery.getResultList()) {
-            System.out.println(s.getEmail());
+            log.info(s.getEmail());
         }
     }
 
@@ -63,7 +93,7 @@ public class StudentDao implements IStudentDao {
         Address address = em.find(Address.class, s.getAddress().getId());
         s.setAddress(address);
         ((Session) em.getDelegate()).saveOrUpdate(o);
-        log.error("persisted object" + o);
+        log.info("persisted object" + o);
         return 1;
     }
 
@@ -71,4 +101,5 @@ public class StudentDao implements IStudentDao {
     public void delete(Object o) {
         em.remove(o);
     }
+
 }
