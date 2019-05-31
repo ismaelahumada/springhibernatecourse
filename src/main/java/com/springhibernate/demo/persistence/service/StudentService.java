@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service @Slf4j
@@ -32,7 +31,7 @@ public class StudentService {
         log.info(oap.printSpaces());
         log.info(oap.printSpaces());
         System.out.println("Entering tweaked dao");
-        Collection<Student> studentsFetchJoin = studentDao.getAllStudentsFetchJoinCourses();
+        Collection<Student> studentsFetchJoin = studentDao.getAllStudentsJoinFetchCourses();
 
         log.info(oap.printSpaces());
         return studentsFetchJoin;

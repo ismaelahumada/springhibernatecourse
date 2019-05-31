@@ -3,6 +3,7 @@ package com.springhibernate.demo.persistence.dao;
 import com.springhibernate.demo.persistence.entity.Address;
 import com.springhibernate.demo.persistence.entity.Course;
 import com.springhibernate.demo.persistence.entity.Student;
+import com.springhibernate.demo.persistence.entity.Subject;
 import com.springhibernate.demo.util.OnlyAcademicPurposes;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
@@ -38,16 +39,38 @@ public class StudentDao implements IStudentDao {
 
     @Override
     public List<Student> getAll() {
-        log.info("---------------Printing studentList from JPQL query---------------");
-        List<Student> studentList = em.createQuery("from Student order by email DESC", Student.class).getResultList();
+        log.info("---------------Printing studentList from HQL query---------------");
+        List<Student> studentList = em.createQuery("from Student", Student.class).getResultList();
         for (Student s : studentList) {
             log.info(s.getEmail());
             log.info("Print Student's courses if any");
             for (Course c : s.getCourses()) {
                 log.info(c.getBriefDescription());
+                for (Subject sub : c.getSubjects()){
+                    log.info(sub.getName());
+                    log.info(sub.getComplexity().name());
+                }
             }
         }
         //printAllStudentsWithCriteriaQuery();
+        return studentList;
+    }
+
+    public List<Student> getAllStudentsJoinFetchCourses() {
+        log.info("---------------Printing studentList from HQL query---------------");
+        List<Student> studentList = em.createQuery("select distinct s from Student s join fetch s.courses", Student.class).getResultList();
+        //modificar la query para usar fetch join de subject
+        for (Student s : studentList) {
+            log.info(s.getEmail());
+            log.info("Print Student's courses");
+            for (Course c : s.getCourses()) {
+                log.info("Book Description:" + c.getBriefDescription());
+                for (Subject sub : c.getSubjects()){
+                    log.info(sub.getName());
+                    log.info(sub.getComplexity().name());
+                }
+            }
+        }
         return studentList;
     }
 
@@ -77,19 +100,6 @@ public class StudentDao implements IStudentDao {
     @Override
     public void delete(Object o) {
         em.remove(o);
-    }
-
-    public List<Student> getAllStudentsFetchJoinCourses() {
-        log.info("---------------Printing studentList from JPQL query---------------");
-        List<Student> studentList = em.createQuery("select distinct s from Student s left join fetch s.courses", Student.class).getResultList();
-        for (Student s : studentList) {
-            log.info(s.getEmail());
-            log.info("Print Student's courses");
-            for (Course c : s.getCourses()) {
-                log.info("Book Description:" + c.getBriefDescription());
-            }
-        }
-        return studentList;
     }
 
 }
